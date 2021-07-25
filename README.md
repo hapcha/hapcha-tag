@@ -49,8 +49,17 @@ const fruit_salad = [
 ```
 
 ## How do I create a Hapcha Tag?
+Creating a Hapcha Tag from an object or array such as the ones above are easy with the encode() method.
 ```
 const hapchaTag = new HapchaTag();
-const fruit_tag = ht.decode(fruit); //returns 'v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"'
-const fruit_salad_tag = ht.encode(fruit_salad); //returns [v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"][v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"]
+const fruit_tag = hapchaTag.encode(fruit); //returns 'v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"'
+const fruit_salad_tag = hapchaTag.encode(fruit_salad); //returns [v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"][v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"]
+```
+
+## How do I turn a Hapcha Tag back into an object I can use?
+Similarly, a string representing a Hapcha Tag can be turned back into an object or array using the decode() method. These return the object and array we defined in the first cell.
+```
+const hapchaTag = new HapchaTag();
+const fruit = hapchaTag.decode(fruit_tag);
+const fruit_salad = hapchaTag.decode(fruit_salad_tag);
 ```
