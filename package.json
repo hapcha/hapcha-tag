@@ -1,0 +1,24 @@
+{
+  "name": "hapcha-tag",
+  "version": "1.0.0",
+  "description": "Hapcha Tags are a way of storing nutritional information for food products in a shortened string so that you can transfer the information quickly and easily, for example in QR codes.",
+  "main": "hapcha-tag.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hapcha/hapcha-tag.git"
+  },
+  "keywords": [
+    "hapcha",
+    "nutrition",
+    "label"
+  ],
+  "author": "Hapcha ltd.",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/hapcha/hapcha-tag/issues"
+  },
+  "homepage": "https://github.com/hapcha/hapcha-tag#readme"
+}
