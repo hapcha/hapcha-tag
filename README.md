@@ -6,7 +6,6 @@ Hapcha Tags work by converting a Javascript Object containing a product's nutrti
 
 ```
 //Define a Single Food
-
 const fruit = {
     version: 1,
     product_name: 'Pineapple 🍍',
@@ -20,6 +19,7 @@ const fruit = {
     unit: 'g'
   };
 
+//Define Multiple Foods
 const fruit_salad = [
     {
       version: 1,
@@ -46,4 +46,11 @@ const fruit_salad = [
       unit: 'g'
     }
   ];
+```
+
+## How do I create a Hapcha Tag?
+```
+const hapchaTag = new HapchaTag();
+const fruit_tag = ht.decode(fruit); //returns 'v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"'
+const fruit_salad_tag = ht.encode(fruit_salad); //returns [v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"][v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"]
 ```
