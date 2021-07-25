@@ -2,9 +2,9 @@
   "name": "hapcha-tag",
   "version": "1.0.0",
   "description": "Hapcha Tags are a way of storing nutritional information for food products in a shortened string so that you can transfer the information quickly and easily, for example in QR codes.",
-  "main": "hapcha-tag.js",
+  "main": "src/hapcha-tag.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node src/hapcha-tag.js"
   },
   "repository": {
     "type": "git",
@@ -12,6 +12,7 @@
   },
   "keywords": [
     "hapcha",
+    "hapcha tag",
     "nutrition",
     "label"
   ],
