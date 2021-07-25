@@ -7,7 +7,7 @@ class HapchaTag {
       {flag: 'S', type: 'number', field: 'product_amount'},
       {flag: 's', type: 'number', field: 'serving_amount'},
       {flag: 'U', type: 'string', field: 'unit'},
-      {flag: 'K', type: 'number', field: 'energy-kcal_100g'},
+      {flag: 'K', type: 'number', field: 'kcal_100g'},
       {flag: 'P', type: 'number', field: 'proteins_100g'},
       {flag: 'Cn', type: 'number', field: 'casein_100g'},
       {flag: 'Sp', type: 'number', field: 'serum-proteins_100g'},
