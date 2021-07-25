@@ -1,6 +1,11 @@
 # Welcome to Hapcha Tags (hapcha-tag)
 ## What are Hapcha Tags?
 Hapcha Tags are a way of storing nutritional information for food products in a shortened string so that you can transfer the information quickly and easily, for example in QR codes. We are currently working to implement Hapcha Tags in the [Hapcha app](https://hapcha.com) to help users add foods to their meals quickly and so they can share meals with each other and we hope that the format can be developed collaboratively, allowing users to share foods across apps and easily add nutrition information from places such as menus and food packaging.
+## How do I install Hapcha Tags?
+Hapcha Tags can be instaleld either from the src directory on Git Hub or by installing the NPM package with the following command.
+```
+npm i hapcha-tag
+```
 ## How do they work?
 Hapcha Tags work by converting a Javascript Object containing a product's nutrtional information into a string. You can define one of these objects using the [standard fields in the Open Food Facts Database](https://static.openfoodfacts.org/data/data-fields.txt). At the moment, not all of these fields are have been enabled in Hapcha tags, but all the ones in the "# Nutrition facts" section have. You can use these to definie an object containing a single food like this:
 ```
