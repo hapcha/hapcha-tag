@@ -1,6 +1,9 @@
 # Welcome to Hapcha Tags (hapcha-tag)
 ## What are Hapcha Tags?
-Hapcha Tags are a way of storing nutritional information for food products in a shortened string so that you can transfer the information quickly and easily, for example in QR codes. We are currently working to implement Hapcha Tags in the [Hapcha app](https://hapcha.com) to help users add foods to their meals quickly and so they can share meals with each other and we hope that the format can be developed collaboratively, allowing users to share foods across apps and easily add nutrition information from places such as menus and food packaging.
+Hapcha Tags are a way of storing nutritional information for food products in a shortened string so that you can transfer the information quickly and easily, for example in QR codes. We are currently working to implement Hapcha Tags in the [Hapcha app](https://hapcha.com) to help users add foods to their meals quickly and so they can share meals with each other and we hope that the format can be developed collaboratively, allowing users to share foods across apps and easily add nutrition information from places such as menus and food packaging. Also, they look really cool.
+```
+v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"
+```
 ## How do I install Hapcha Tags?
 Hapcha Tags can be instaleld either from the src directory on Git Hub or by installing the NPM package with the following command.
 ```
