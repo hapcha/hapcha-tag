@@ -154,10 +154,12 @@ export class HapchaTag {
     const output = ingredients.map(ingredient => {
       let ingredient_string =  "v1";
       Object.keys(ingredient).map(key => {
-        if (key != 'version') {
-          const flag = this.decode_map[fields.indexOf(key)].flag;
-          const val = this.decode_map[fields.indexOf(key)].type == 'string' ? '"' + ingredient[key] + '"': ingredient[key];
-          ingredient_string += flag + val;
+        if (fields.indexOf(key) >= 0){
+          if (key != 'version') {
+            const flag = this.decode_map[fields.indexOf(key)].flag;
+            const val = this.decode_map[fields.indexOf(key)].type == 'string' ? '"' + ingredient[key] + '"': ingredient[key];
+            ingredient_string += flag + val;
+          }
         }
       });
       return ingredient_string
