@@ -1,4 +1,4 @@
-class HapchaTag {
+export class HapchaTag {
   constructor(){
     this.decode_map = [
       {flag: 'v', type: 'number', field: 'version'},
@@ -148,7 +148,7 @@ class HapchaTag {
 
   encode(test_structure){
     const multiple_ingredients = (test_structure instanceof Array);
-    const ingredients = test_structure ? test_structure : [test_structure];
+    const ingredients = multiple_ingredients ? test_structure : [test_structure];
     const fields = this.decode_map.map(f => f.field);
 
     const output = ingredients.map(ingredient => {
