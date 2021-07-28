@@ -165,6 +165,11 @@ export class HapchaTag {
       return ingredient_string
     });
 
+    if (output.length > 1){
+      output = output.map(x => '[' + x + ']');
+      output = output.join()
+    }
+
     return output
   }
 }
