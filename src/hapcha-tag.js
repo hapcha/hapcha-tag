@@ -151,7 +151,7 @@ export class HapchaTag {
     const ingredients = multiple_ingredients ? test_structure : [test_structure];
     const fields = this.decode_map.map(f => f.field);
 
-    const output = ingredients.map(ingredient => {
+    let output = ingredients.map(ingredient => {
       let ingredient_string =  "v1";
       Object.keys(ingredient).map(key => {
         if (fields.indexOf(key) >= 0){
