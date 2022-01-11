@@ -74,7 +74,7 @@ const fruit = hapchaTag.decode(fruit_tag);
 const fruit_salad = hapchaTag.decode(fruit_salad_tag);
 ```
 
-## What happens if a user scans the tag with a tool which does nto support Hapcha Tags?
+## What happens if a user scans the Tag with a tool which does not support Hapcha Tags?
 Great question! If you plan to share your Hapcha Tags in either QR Codes or an NFC Tag, the having a fallback for when a user scans the Hapcha tag outside of an app experience is really important. Fortunately, by adding the "domain" flag as an optional parameter to the encode method, the user will be directed to that URL should they scan the Hapcha Tag (as a QR code for example) in their phone's native camera or in an application uncapable of supporting it. On this webpage, should you choose, you can then collect this data from the "ht" parameter and decode it as usual.
 
 ```
