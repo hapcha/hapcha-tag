@@ -97,10 +97,46 @@ export class HapchaTag {
       {flag: 'Cb ', type: 'number', field: 'carbon-footprint_100g'},
       {flag: 'Nf ', type: 'number', field: 'nutrition-score-fr_100g'},
       {flag: 'Nk ', type: 'number', field: 'nutrition-score-uk_100g'},
+      {flag: 'Pc', type: 'bool', field: 'contains_pecans'},
+      {flag: 'Mu', type: 'bool', field: 'contains_mustard'},
+      {flag: 'Wa', type: 'bool', field: 'contains_walnuts'},
+      {flag: 'Mc', type: 'bool', field: 'contains_macadamia-nuts'},
+      {flag: 'Ci', type: 'bool', field: 'contains_caffeine'},
+      {flag: 'Pe', type: 'bool', field: 'contains_peanuts'},
+      {flag: 'Sy', type: 'bool', field: 'contains_soya'},
+      {flag: 'Gt', type: 'bool', field: 'contains_gluten'},
+      {flag: 'Am', type: 'bool', field: 'contains_almonds'},
+      {flag: 'Cg', type: 'bool', field: 'contains_celery'},
+      {flag: 'Sx', type: 'bool', field: 'contains_sulphur-dioxide'},
+      {flag: 'Pi', type: 'bool', field: 'contains_pistachios'},
+      {flag: 'Cw', type: 'bool', field: 'contains_cashew-nuts'},
+      {flag: 'Hz', type: 'bool', field: 'contains_hazelnuts'},
+      {flag: 'So', type: 'bool', field: 'contains_soy'},
+      {flag: 'Bz', type: 'bool', field: 'contains_brazil-nuts'},
+      {flag: 'Mk', type: 'bool', field: 'contains_milk'},
+      {flag: 'Sh', type: 'bool', field: 'contains_sulphites'},
+      {flag: 'Pn', type: 'bool', field: 'contains_pine-nuts'},
+      {flag: 'Ss', type: 'bool', field: 'contains_sesame'},
     ];
   }
 
+  _validURL(str) {
+    var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+      '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+      '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+      '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+      '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+      '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+    return !!pattern.test(str);
+  }
+
   decode(test_str){
+    //If a URL was passed in get the Tag
+    if (this._validURL(test_str)){
+      test_str = decodeURI(test_str);
+      test_str = test_str.split('?ht=')[1];
+    }
+
     const multiple_ingredients = test_str[0] == '[';
     const ingredients = multiple_ingredients ? test_str.split("[").join("").split("]").slice(0,-1) : [test_str];
     const flags = this.decode_map.map(f => f.flag);
@@ -127,6 +163,13 @@ export class HapchaTag {
             const value = ingredient.substring(start_idx, next_char_idx);
             ingredient_formatted[flag_map.field] = parseFloat(value);
             pos = next_char_idx;
+          } else if (flag_map.type == 'bool'){
+              const start_idx = pos + flag.length;
+              let next_char_idx = ingredient.substring(start_idx).search(/[A-Za-z]/) >= 0 ? ingredient.substring(start_idx).search(/[A-Za-z]/) + start_idx : ingredient.length;
+              const value = ingredient.substring(start_idx, next_char_idx);
+              const bool_value = parseInt(value) == 1;
+              ingredient_formatted[flag_map.field] = bool_value;
+              pos = next_char_idx;
           } else if (flag_map.type == 'string'){
             const start_idx = pos + flag.length + 1;
             const next_char_idx = ingredient.substring(start_idx).indexOf('"') + start_idx;
@@ -134,6 +177,7 @@ export class HapchaTag {
             ingredient_formatted[flag_map.field] = ingredient.substr(start_idx, length);
             pos = next_char_idx + 1;
           } else {
+            console.warn("A variable of unknown type (" + flag_map.type + ') was recieved for decoding.');
             pos +=1
           }
         } else {
@@ -146,7 +190,7 @@ export class HapchaTag {
     return output
   }
 
-  encode(test_structure){
+  encode(test_structure, args={'domain': false}){
     const multiple_ingredients = (test_structure instanceof Array);
     const ingredients = multiple_ingredients ? test_structure : [test_structure];
     const fields = this.decode_map.map(f => f.field);
@@ -157,7 +201,16 @@ export class HapchaTag {
         if (fields.indexOf(key) >= 0){
           if (key != 'version') {
             const flag = this.decode_map[fields.indexOf(key)].flag;
-            const val = this.decode_map[fields.indexOf(key)].type == 'string' ? '"' + ingredient[key] + '"': ingredient[key];
+            let val;
+            if (this.decode_map[fields.indexOf(key)].type == 'string'){
+              val = '"' + ingredient[key] + '"';
+            } else if (this.decode_map[fields.indexOf(key)].type == 'bool'){
+              val = ingredient[key] ? '1' : '0';
+            } else if (this.decode_map[fields.indexOf(key)].type == 'number'){
+              val = ingredient[key];
+            } else {
+              throw new Error("An input variable of unknown type (" + this.decode_map[fields.indexOf(key)].type + ') was sent for encoding.');
+            }
             ingredient_string += flag + val;
           }
         }
@@ -167,9 +220,14 @@ export class HapchaTag {
 
     if (output.length > 1){
       output = output.map(x => '[' + x + ']');
-      output = output.join()
+      output = output.join('');
     }
 
-    return output
+    if (args.domain == false){
+      return output
+    } else {
+      const url = args.domain + '?ht=' + output;
+      return url
+    }
   }
 }

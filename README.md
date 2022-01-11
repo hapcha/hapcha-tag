@@ -59,8 +59,11 @@ const fruit_salad = [
 Creating a Hapcha Tag from an object or array such as the ones above are easy with the encode() method.
 ```
 const hapchaTag = new HapchaTag();
-const fruit_tag = hapchaTag.encode(fruit); //returns 'v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"'
-const fruit_salad_tag = hapchaTag.encode(fruit_salad); //returns [v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"][v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"]
+const fruit_tag = hapchaTag.encode(fruit);
+//v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"
+
+const fruit_salad_tag = hapchaTag.encode(fruit_salad);
+//[v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"][v1N"Mango 🥭"n"Mango 🥭"K60C15P0.8F0.4S336s165U"g"]
 ```
 
 ## How do I turn a Hapcha Tag back into an object I can use?
@@ -69,4 +72,13 @@ Similarly, a string representing a Hapcha Tag can be turned back into an object 
 const hapchaTag = new HapchaTag();
 const fruit = hapchaTag.decode(fruit_tag);
 const fruit_salad = hapchaTag.decode(fruit_salad_tag);
+```
+
+## What happens if a user scans the tag with a tool which does nto support Hapcha Tags?
+Great question! If you plan to share your Hapcha Tags in either QR Codes or an NFC Tag, the having a fallback for when a user scans the Hapcha tag outside of an app experience is really important. Fortunately, by adding the "domain" flag as an optional parameter to the encode method, the user will be directed to that URL should they scan the Hapcha Tag (as a QR code for example) in their phone's native camera or in an application uncapable of supporting it. On this webpage, should you choose, you can then collect this data from the "ht" parameter and decode it as usual.
+
+```
+const hapchaTag = new HapchaTag();
+const fruit_tag = hapchaTag.encode(fruit, {"domain": "https://hapcha.com"});
+//https://hapcha.com?ht=v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"
 ```
