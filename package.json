@@ -21,5 +21,6 @@
   "bugs": {
     "url": "https://github.com/hapcha/hapcha-tag/issues"
   },
-  "homepage": "https://github.com/hapcha/hapcha-tag#readme"
+  "homepage": "https://github.com/hapcha/hapcha-tag#readme",
+  "type": "module"
 }

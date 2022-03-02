@@ -76,7 +76,7 @@ export class HapchaTag {
       {flag: 'Pa', type: 'number', field: 'pantothenic-acid_100g'},
       {flag: 'Si ', type: 'number', field: 'silica_100g'},
       {flag: 'Bc', type: 'number', field: 'bicarbonate_100g'},
-      {flag: 'Kp ', type: 'number', field: 'potassium_100g'},
+      {flag: 'Kp', type: 'number', field: 'potassium_100g'},
       {flag: 'Cl', type: 'number', field: 'chloride_100g'},
       {flag: 'Ca', type: 'number', field: 'calcium_100g'},
       {flag: 'Ps', type: 'number', field: 'phosphorus_100g'},
@@ -203,7 +203,7 @@ export class HapchaTag {
             const flag = this.decode_map[fields.indexOf(key)].flag;
             let val;
             if (this.decode_map[fields.indexOf(key)].type == 'string'){
-              val = '"' + ingredient[key] + '"';
+              val = ingredient[key] != '' ? '"' + ingredient[key] + '"' : '';
             } else if (this.decode_map[fields.indexOf(key)].type == 'bool'){
               val = ingredient[key] ? '1' : '0';
             } else if (this.decode_map[fields.indexOf(key)].type == 'number'){
@@ -211,7 +211,10 @@ export class HapchaTag {
             } else {
               throw new Error("An input variable of unknown type (" + this.decode_map[fields.indexOf(key)].type + ') was sent for encoding.');
             }
-            ingredient_string += flag + val;
+
+            if (String(val) != ''){
+              ingredient_string += flag + val;
+            }
           }
         }
       });
@@ -228,6 +231,17 @@ export class HapchaTag {
     } else {
       const url = args.domain + '?ht=' + output;
       return url
+    }
+  }
+
+  addCustomFlag(flag){
+    if ('flag' in flag && 'field' in flag && 'type' in flag){
+      const allflags = this.decode_map.map(x => x['flag']);
+      if (allflags.indexOf(flag['flag']) == -1){
+        this.decode_map.push(flag);
+      } else {
+        console.warn("The custom flag (" + flag['flag'] + ") you tried to add already exists. Try another two letter identifier.");
+      }
     }
   }
 }
