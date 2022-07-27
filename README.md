@@ -111,7 +111,7 @@ const fruit_tag = hapchaTag.encode(fruit, {"domain": "https://hapcha.com"});
 //https://hapcha.com?ht=v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"
 ```
 
-## How can I see what Hapcha tags can do?
+## How can I see what Hapcha Tags can do?
 In this version, we've added a "tests" folder which implements the above examples of storing single, multiple and recipe foods in a single string. Youc an run those tests in node.js or copy the code and use them as examples.
 
 ## Where else are Hapcha Tags used?
