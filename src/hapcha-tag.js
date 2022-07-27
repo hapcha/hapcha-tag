@@ -6,6 +6,7 @@ export class HapchaTag {
       {flag: 'n', type: 'string', field: 'generic_name'},
       {flag: 'S', type: 'number', field: 'product_amount'},
       {flag: 's', type: 'number', field: 'serving_amount'},
+      {flag: 'i', type: 'collection', field: 'ingredients'},
       {flag: 'U', type: 'string', field: 'unit'},
       {flag: 'K', type: 'number', field: 'energy-kcal_100g'},
       {flag: 'P', type: 'number', field: 'proteins_100g'},
@@ -141,13 +142,13 @@ export class HapchaTag {
     const ingredients = multiple_ingredients ? test_str.split("[").join("").split("]").slice(0,-1) : [test_str];
     const flags = this.decode_map.map(f => f.flag);
 
-    const output = ingredients.map(ingredient => {
+    let output = ingredients.map(ingredient => {
       let pos = 0;
       const ingredient_formatted = {};
       while (pos < ingredient.length) {
         const next_char = ingredient[pos +1];
         
-        const char_length = !isNaN(next_char) || next_char == '"' ? 1: 2;
+        const char_length = !isNaN(next_char) || next_char == '"' ? 1: 2 || next_char == '[' ? 1: 2;
         const flag = ingredient.substring(pos, pos + char_length);
 
         if (flag[0] == '"' || !isNaN(flag[0])){
@@ -164,18 +165,30 @@ export class HapchaTag {
             ingredient_formatted[flag_map.field] = parseFloat(value);
             pos = next_char_idx;
           } else if (flag_map.type == 'bool'){
-              const start_idx = pos + flag.length;
-              let next_char_idx = ingredient.substring(start_idx).search(/[A-Za-z]/) >= 0 ? ingredient.substring(start_idx).search(/[A-Za-z]/) + start_idx : ingredient.length;
-              const value = ingredient.substring(start_idx, next_char_idx);
-              const bool_value = parseInt(value) == 1;
-              ingredient_formatted[flag_map.field] = bool_value;
-              pos = next_char_idx;
+            const start_idx = pos + flag.length;
+            let next_char_idx = ingredient.substring(start_idx).search(/[A-Za-z]/) >= 0 ? ingredient.substring(start_idx).search(/[A-Za-z]/) + start_idx : ingredient.length;
+            const value = ingredient.substring(start_idx, next_char_idx);
+            const bool_value = parseInt(value) == 1;
+            ingredient_formatted[flag_map.field] = bool_value;
+            pos = next_char_idx;
           } else if (flag_map.type == 'string'){
             const start_idx = pos + flag.length + 1;
             const next_char_idx = ingredient.substring(start_idx).indexOf('"') + start_idx;
             const length = next_char_idx - start_idx;
             ingredient_formatted[flag_map.field] = ingredient.substr(start_idx, length);
             pos = next_char_idx + 1;
+          } else if (flag_map.type == 'collection'){
+            const start_idx = pos + flag.length + 1;
+            const remaining_close_brackets = ingredient.split("").map((l, i) => l.indexOf(']') >= 0 ? i : -1).filter(v => {
+              const is_end_char = v > -1;
+              const starts_after_opening = v > start_idx;
+              const is_last_in_collection = ingredient[v+1] != "[" || v + 1 == ingredient.length;
+              return is_end_char & starts_after_opening & is_last_in_collection
+            })[0];
+            const ingredient_encoding = ingredient.substring(start_idx - 1, remaining_close_brackets + 1);
+            ingredient_formatted[flag_map.field] = this.decode(ingredient_encoding);
+
+            pos = remaining_close_brackets + 1;
           } else {
             console.warn("A variable of unknown type (" + flag_map.type + ') was recieved for decoding.');
             pos +=1
@@ -187,12 +200,16 @@ export class HapchaTag {
       return ingredient_formatted
     });
     
+    if (output.length == 1){
+      output = output[0];
+    }
+
     return output
   }
 
   encode(test_structure, args={'domain': false}){
-    const multiple_ingredients = (test_structure instanceof Array);
-    const ingredients = multiple_ingredients ? test_structure : [test_structure];
+    const multiple_ingredients_at_base = (test_structure instanceof Array);
+    const ingredients = multiple_ingredients_at_base ? test_structure : [test_structure];
     const fields = this.decode_map.map(f => f.field);
 
     let output = ingredients.map(ingredient => {
@@ -208,6 +225,8 @@ export class HapchaTag {
               val = ingredient[key] ? '1' : '0';
             } else if (this.decode_map[fields.indexOf(key)].type == 'number'){
               val = ingredient[key];
+            } else if (this.decode_map[fields.indexOf(key)].type == 'collection'){
+              val = this.encode(ingredient[key]); 
             } else {
               throw new Error("An input variable of unknown type (" + this.decode_map[fields.indexOf(key)].type + ') was sent for encoding.');
             }
@@ -224,13 +243,15 @@ export class HapchaTag {
     if (output.length > 1){
       output = output.map(x => '[' + x + ']');
       output = output.join('');
+    } else {
+      output = output[0];
     }
 
     if (args.domain == false){
       return output
     } else {
       const url = args.domain + '?ht=' + output;
-      return url
+      return encodeURI(url);
     }
   }
 

@@ -25,7 +25,7 @@ const fruit = {
     unit: 'g'
   };
 ```
-Alternatively, Hapcha Tags also support storing multiple foods, which can be done by creating an array of food objects.
+Hapcha Tags also support storing multiple foods, which can be done by creating an array of food objects.
 ```
 const fruit_salad = [
     {
@@ -54,7 +54,35 @@ const fruit_salad = [
     }
   ];
 ```
-
+Finally, you can also nest foods into collections and assign flags into fields which accept collections. This allows you toa ssign some infoirmation to the aprent food and other information to the nested foods. Ingredients in a fruit salad are a great example. As a general rule of thumb, it is best practice to only provide information on amounts, energy and nutrients at one level (usually the nested foods in ingredients) so that the overall nutrients can be calcultaed from the foods constituent parts.
+```
+const fruit_salad = {
+    version: 1,
+    product_name: 'Fruit Salad',
+    ingredients: [
+      {
+        product_name: 'Pineapple 🍍',
+        generic_name: 'Pineapple 🍍',
+        carbohydrates_100g: 13,
+        proteins_100g: 0.5,
+        fat_100g: 0.1,
+        product_amount: 905,
+        serving_amount: 166,
+        unit: 'g'
+      },
+      {
+        product_name: 'Mango 🥭',
+        generic_name: 'Mango 🥭',
+        carbohydrates_100g: 15,
+        proteins_100g: 0.8,
+        fat_100g: 0.4,
+        product_amount: 336,
+        serving_amount: 165,
+        unit: 'g'
+      }
+    ]
+  }
+```
 ## How do I create a Hapcha Tag?
 Creating a Hapcha Tag from an object or array such as the ones above are easy with the encode() method.
 ```
@@ -82,3 +110,6 @@ const hapchaTag = new HapchaTag();
 const fruit_tag = hapchaTag.encode(fruit, {"domain": "https://hapcha.com"});
 //https://hapcha.com?ht=v1N"Pineapple 🍍"n"Pineapple 🍍"K50C13P0.5F0.1S905s166U"g"
 ```
+
+## How can I see what Hapcha tags can do?
+In this version, we've added a "tests" folder which implements the above examples of storing single, multiple and recipe foods in a single string. Youc an run those tests in node.js or copy the code and use them as examples.
