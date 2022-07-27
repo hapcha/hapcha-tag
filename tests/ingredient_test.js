@@ -9,7 +9,7 @@ const fruit_salad = {
       generic_name: 'Pineapple 🍍',
       kcal_100g: 50,
       carbohydrates_100g: 13,
-      proteins_100g: 0.5,
+      proteins_100g: 0.567890,
       fat_100g: 0.1,
       product_amount: 905,
       serving_amount: 166,

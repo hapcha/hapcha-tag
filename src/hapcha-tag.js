@@ -131,9 +131,9 @@ export class HapchaTag {
     return !!pattern.test(str);
   }
 
-  decode(test_str){
+  decode(test_str, args={'check_for_domain': true, 'decimal_places': 0}){
     //If a URL was passed in get the Tag
-    if (this._validURL(test_str)){
+    if (args.check_for_domain && this._validURL(test_str)){
       test_str = decodeURI(test_str);
       test_str = test_str.split('?ht=')[1];
     }
@@ -162,7 +162,7 @@ export class HapchaTag {
             const start_idx = pos + flag.length;
             let next_char_idx = ingredient.substring(start_idx).search(/[A-Za-z]/) >= 0 ? ingredient.substring(start_idx).search(/[A-Za-z]/) + start_idx : ingredient.length;
             const value = ingredient.substring(start_idx, next_char_idx);
-            ingredient_formatted[flag_map.field] = parseFloat(value);
+            ingredient_formatted[flag_map.field] = parseFloat(value).toFixed(args.decimal_places);
             pos = next_char_idx;
           } else if (flag_map.type == 'bool'){
             const start_idx = pos + flag.length;
@@ -186,7 +186,7 @@ export class HapchaTag {
               return is_end_char & starts_after_opening & is_last_in_collection
             })[0];
             const ingredient_encoding = ingredient.substring(start_idx - 1, remaining_close_brackets + 1);
-            ingredient_formatted[flag_map.field] = this.decode(ingredient_encoding);
+            ingredient_formatted[flag_map.field] = this.decode(ingredient_encoding, {'check_for_domain': false});
 
             pos = remaining_close_brackets + 1;
           } else {
@@ -207,7 +207,7 @@ export class HapchaTag {
     return output
   }
 
-  encode(test_structure, args={'domain': false}){
+  encode(test_structure, args={'domain': false, 'decimal_places': 0}){
     const multiple_ingredients_at_base = (test_structure instanceof Array);
     const ingredients = multiple_ingredients_at_base ? test_structure : [test_structure];
     const fields = this.decode_map.map(f => f.field);
@@ -224,7 +224,7 @@ export class HapchaTag {
             } else if (this.decode_map[fields.indexOf(key)].type == 'bool'){
               val = ingredient[key] ? '1' : '0';
             } else if (this.decode_map[fields.indexOf(key)].type == 'number'){
-              val = ingredient[key];
+              val = ingredient[key].toFixed(args.decimal_places);
             } else if (this.decode_map[fields.indexOf(key)].type == 'collection'){
               val = this.encode(ingredient[key]); 
             } else {
