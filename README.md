@@ -54,7 +54,7 @@ const fruit_salad = [
     }
   ];
 ```
-Finally, you can also nest foods into collections and assign flags into fields which accept collections. This allows you toa ssign some infoirmation to the aprent food and other information to the nested foods. Ingredients in a fruit salad are a great example. As a general rule of thumb, it is best practice to only provide information on amounts, energy and nutrients at one level (usually the nested foods in ingredients) so that the overall nutrients can be calcultaed from the foods constituent parts.
+Finally, you can also store recipes in Hapcha Tags by nesting foods into collections for supported fields (like ingredients). This allows you to assign some information to the parent food and other information to the nested foods. Ingredients in a fruit salad are a great example. As a general rule of thumb, it is best practice to only provide information on amounts, energy and nutrients at one level (usually the nested foods in ingredients) so that the overall nutrients can be calculated from the food's constituent parts.
 ```
 const fruit_salad = {
     version: 1,
@@ -113,3 +113,8 @@ const fruit_tag = hapchaTag.encode(fruit, {"domain": "https://hapcha.com"});
 
 ## How can I see what Hapcha tags can do?
 In this version, we've added a "tests" folder which implements the above examples of storing single, multiple and recipe foods in a single string. Youc an run those tests in node.js or copy the code and use them as examples.
+
+## Where else are Hapcha Tags used?
+Whilst developed initally for the [Hapcha app](https://hapcha.com), Hapcha Tags are free, open-source and available for anyone to implement and use. We even have a [web app](https://hapcha.com/tag-designer/) where you generate your own QR Codes for food products using a UI. We're reallye scited to announce that Hapcha Tags bare bnow also used in [Bygram](https://bygram.co.uk), a refill supermarket in London, UK to help consumers save information on what they fill their tubs with!
+
+If you're working on a project with Hapcha Tags, let us know and we can feature you here. Whilst GitHub manages the technical implementation of the HapchaTag, it is our hope that the standards behind the Hapcha Tag will be steered by a committee of organizations that use Hapcha Tags. if you or your organization would be interested in steering the future of the format with us, let us know!
