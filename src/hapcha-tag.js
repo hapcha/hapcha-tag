@@ -139,19 +139,25 @@ export class HapchaTag {
     }
 
     const multiple_ingredients = test_str[0] == '[';
-    const ingredients = multiple_ingredients ? test_str.split("[").join("").split("]").slice(0,-1) : [test_str];
+    let ingredients = multiple_ingredients ? test_str.split("[").join("").split("]").slice(0,-1) : [test_str];
     const flags = this.decode_map.map(f => f.flag);
 
     let output = ingredients.map(ingredient => {
       let pos = 0;
       const ingredient_formatted = {};
       while (pos < ingredient.length) {
+        const curr_char = ingredient[pos];
         const next_char = ingredient[pos +1];
-        
-        const char_length = !isNaN(next_char) || next_char == '"' ? 1: 2 || next_char == '[' ? 1: 2;
-        const flag = ingredient.substring(pos, pos + char_length);
 
-        if (flag[0] == '"' || !isNaN(flag[0])){
+        const next_two_letter = curr_char + next_char;
+        
+        let flag;
+
+        if (flags.indexOf(next_two_letter) > -1){
+          flag = next_two_letter;
+        } else if (flags.indexOf(curr_char) > -1){
+          flag = curr_char;
+        } else {
           pos +=1;
           continue
         }
@@ -162,7 +168,7 @@ export class HapchaTag {
             const start_idx = pos + flag.length;
             let next_char_idx = ingredient.substring(start_idx).search(/[A-Za-z]/) >= 0 ? ingredient.substring(start_idx).search(/[A-Za-z]/) + start_idx : ingredient.length;
             const value = ingredient.substring(start_idx, next_char_idx);
-            ingredient_formatted[flag_map.field] = parseFloat(value).toFixed(args.decimal_places);
+            ingredient_formatted[flag_map.field] = parseFloat(parseFloat(value).toFixed(args.decimal_places));
             pos = next_char_idx;
           } else if (flag_map.type == 'bool'){
             const start_idx = pos + flag.length;
@@ -224,7 +230,7 @@ export class HapchaTag {
             } else if (this.decode_map[fields.indexOf(key)].type == 'bool'){
               val = ingredient[key] ? '1' : '0';
             } else if (this.decode_map[fields.indexOf(key)].type == 'number'){
-              val = ingredient[key].toFixed(args.decimal_places);
+              val = parseFloat(ingredient[key].toFixed(args.decimal_places));
             } else if (this.decode_map[fields.indexOf(key)].type == 'collection'){
               val = this.encode(ingredient[key]); 
             } else {
